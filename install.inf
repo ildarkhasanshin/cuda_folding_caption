@@ -1,0 +1,17 @@
+[info]
+title=Folding
+desc=Show first line of the folding block on the top.
+type=cudatext-plugin
+subdir=cuda_folding
+homepage=https://github.com/ildarkhasanshin/cuda_folding/
+api=1.0.439
+
+[item1]
+section=events
+events=on_caret_slow,on_focus
+
+[item10]
+section=commands
+caption=Folding\Config
+method=config
+menu=o
