@@ -27,21 +27,26 @@ class Command:
         return self.indexes
 
     def folding_set(self, text = ''):
-        h_sbf_ = self.folding_panel_init()
-        for h_sbf__ in h_sbf_:
-            statusbar_proc(h_sbf__, STATUSBAR_SET_CELL_TEXT, index=h_sbf_[h_sbf__], value=text)
+        h_sbf = self.folding_panel_init()
+        for h_sbf_ in h_sbf:
+            statusbar_proc(h_sbf_, STATUSBAR_SET_CELL_TEXT, index=h_sbf[h_sbf_], value=text)
 
     def get_fold_block(self, y):
-        for fold in reversed(ed.folding(FOLDING_GET_LIST)):
+        res = []
+        for fold in ed.folding(FOLDING_GET_LIST):
             f0 = fold[0]
             f1 = fold[1]
             if f0 < y <= f1 and ((f1 - f0) > 1):
-                return f0
+                res.append(f0)
+        return res
 
     def work(self):
         res = self.get_fold_block(ed.get_carets()[0][1])
+        text_ = ''
         if res is not None:
-            self.folding_set(ed.get_text_line(res).strip())
+            for res_ in res:
+                text_ = text_ + ed.get_text_line(res_)[0:-1].strip() + ' > '
+            self.folding_set(text_[0:-3])
         else:
             self.folding_set('')
 
