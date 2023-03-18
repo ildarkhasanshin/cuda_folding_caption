@@ -36,7 +36,7 @@ class Command:
         for fold in ed.folding(FOLDING_GET_LIST):
             f0 = fold[0]
             f1 = fold[1]
-            if f0 < y <= f1 and ((f1 - f0) > 1):
+            if f0 <= y <= f1 and ((f1 - f0) > 1):
                 res.append(f0)
         return res
 
@@ -45,8 +45,8 @@ class Command:
         text_ = ''
         if res is not None:
             for res_ in res:
-                text_ = text_ + ed.get_text_line(res_)[0:-1].strip() + ' > '
-            self.folding_set(text_[0:-3])
+                text_ = text_ + ed.get_text_line(res_)[:-1].strip() + ' > '
+            self.folding_set(text_[:-3])
         else:
             self.folding_set('')
 
