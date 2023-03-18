@@ -27,7 +27,6 @@ class Command:
             for text_ in text:
                 ind_ = statusbar_proc(h_sbf_, STATUSBAR_ADD_CELL)
                 statusbar_proc(h_sbf_, STATUSBAR_SET_PADDING, index=ind_, value=4)
-                #statusbar_proc(h_sbf_, STATUSBAR_SET_CELL_AUTOSTRETCH, index=ind_, value=True)
                 colors = app_proc(PROC_THEME_UI_DICT_GET, '')
                 statusbar_proc(h_sbf_, STATUSBAR_SET_CELL_COLOR_FONT, index=ind_, value=colors['EdTextFont']['color'])
                 statusbar_proc(h_sbf_, STATUSBAR_SET_CELL_COLOR_BACK, index=ind_, value=colors['EdTextBg']['color'])
@@ -50,12 +49,12 @@ class Command:
     def work(self):
         res = self.get_fold_block(ed.get_carets()[0][1])
         text_ = []
-        lines_ = []
+        self.lines_ = []
         if res is not None:
             for res_ in res:
                 text_.append(ed.get_text_line(res_)[:-1].strip())
-                lines_.append(res_)
-            self.folding_set(text_, lines_)
+                self.lines_.append(res_)
+            self.folding_set(text_, self.lines_)
         else:
             self.folding_set()
 
@@ -66,6 +65,18 @@ class Command:
 
     def on_focus(self, ed_self):
         self.on_caret_slow(ed_self)
+
+    def go_level_above(self):
+        y = ed.get_carets()[0][1]
+        y_ = 0
+        for l_ in self.lines_[::-1]:
+            if l_ < y:
+                 y_ = l_
+                 break
+        ed.set_caret(0, y_)
+
+    def go_level_root(self):
+        ed.set_caret(0, self.lines_[0])
 
     def config(self):
         ini_write(FN_CONFIG, SECTION, 'lexers', self.lexers)

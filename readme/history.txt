@@ -1,6 +1,7 @@
 2023.03.18
 [+] display of the first-second-third.. levels
 [+] clickability of level cells
+[+] commands for 'Go to'
 
 2023.03.10
 initial
