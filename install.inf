@@ -10,6 +10,21 @@ api=1.0.439
 section=events
 events=on_caret_slow,on_focus
 
+[item2]
+section=commands
+caption=Folding\Go to\Level above
+method=go_level_above
+
+[item3]
+section=commands
+caption=Folding\Go to\Root-level
+method=go_level_root
+
+[item9]
+section=commands
+caption=Folding\-
+method=_
+
 [item10]
 section=commands
 caption=Folding\Config
