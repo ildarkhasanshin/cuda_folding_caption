@@ -1,9 +1,9 @@
 [info]
-title=Folding
+title=Folding Caption
 desc=Show first line of the folding block on the top.
 type=cudatext-plugin
-subdir=cuda_folding
-homepage=https://github.com/ildarkhasanshin/cuda_folding/
+subdir=cuda_folding_caption
+homepage=https://github.com/ildarkhasanshin/cuda_folding_caption/
 api=1.0.439
 
 [item1]
@@ -12,16 +12,16 @@ events=on_caret_slow,on_focus
 
 [item2]
 section=commands
-caption=Folding\Go to level above
+caption=Folding Caption\Go to level above
 method=go_level_above
 
 [item3]
 section=commands
-caption=Folding\Go to root-level
+caption=Folding Caption\Go to root-level
 method=go_level_root
 
 [item10]
 section=commands
-caption=Folding\Config
+caption=Folding Caption\Config
 method=config
 menu=o
