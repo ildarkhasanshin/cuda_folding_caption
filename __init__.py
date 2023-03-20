@@ -8,28 +8,33 @@ class Command:
     def __init__(self):
         self.indexes = []
         self.h_pfs = []
-        self.lexers = ini_read(FN_CONFIG, SECTION, 'lexers', 'Python')
+        self.lexers = ini_read(FN_CONFIG, SECTION, 'lexers', 'Python,Markdown,reStructuredText')
+        self.position = ini_read(FN_CONFIG, SECTION, 'position', 'top')
 
     def folding_panel_init(self):
         self.h_pf = ed.get_prop(PROP_HANDLE_PARENT)
+        colors = app_proc(PROC_THEME_UI_DICT_GET, '')
         if self.h_pf not in self.h_pfs:
             self.n_sbf = dlg_proc(self.h_pf, DLG_CTL_ADD, 'statusbar')
             self.h_sbf = dlg_proc(self.h_pf, DLG_CTL_HANDLE, index=self.n_sbf)
-            dlg_proc(self.h_pf, DLG_CTL_PROP_SET, index=self.n_sbf, prop={'align':ALIGN_TOP})
+            position_ = ALIGN_TOP if self.position == 'top' else ALIGN_BOTTOM
+            dlg_proc(self.h_pf, DLG_CTL_PROP_SET, index=self.n_sbf, prop={'color':colors['EdTextBg']['color'],'align':position_})
             self.h_pfs.append(self.h_pf)
             self.indexes.append(self.h_sbf)
         return self.indexes
 
     def folding_set(self, text = '', lines = []):
         h_sbf = self.folding_panel_init()
+        colors = app_proc(PROC_THEME_UI_DICT_GET, '')
         for h_sbf_ in h_sbf:
             statusbar_proc(h_sbf_, STATUSBAR_DELETE_ALL)
             for text_ in text:
                 ind_ = statusbar_proc(h_sbf_, STATUSBAR_ADD_CELL)
                 statusbar_proc(h_sbf_, STATUSBAR_SET_PADDING, index=ind_, value=4)
-                colors = app_proc(PROC_THEME_UI_DICT_GET, '')
                 statusbar_proc(h_sbf_, STATUSBAR_SET_CELL_COLOR_FONT, index=ind_, value=colors['EdTextFont']['color'])
                 statusbar_proc(h_sbf_, STATUSBAR_SET_CELL_COLOR_BACK, index=ind_, value=colors['EdTextBg']['color'])
+                #if self.position == 'top':
+                    #statusbar_proc(h_sbf_, STATUSBAR_SET_CELL_COLOR_LINE2, index=ind_, value=colors['EdTextFont']['color'])
                 statusbar_proc(h_sbf_, STATUSBAR_SET_CELL_TEXT, index=ind_, value=text_)
                 statusbar_proc(h_sbf_, STATUSBAR_SET_CELL_HINT, index=ind_, value=text_)
                 statusbar_proc(h_sbf_, STATUSBAR_SET_CELL_CALLBACK, index=ind_, value='module=cuda_folding;cmd=on_cell_click;info='+str(lines[ind_])+';')
@@ -80,6 +85,7 @@ class Command:
 
     def config(self):
         ini_write(FN_CONFIG, SECTION, 'lexers', self.lexers)
+        ini_write(FN_CONFIG, SECTION, 'position', self.position)
         file_open(FN_CONFIG)
         lines = [ed.get_text_line(i) for i in range(ed.get_line_count())]
         try:
