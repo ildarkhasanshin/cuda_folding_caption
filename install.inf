@@ -12,18 +12,13 @@ events=on_caret_slow,on_focus
 
 [item2]
 section=commands
-caption=Folding\Go to\Level above
+caption=Folding\Go to level above
 method=go_level_above
 
 [item3]
 section=commands
-caption=Folding\Go to\Root-level
+caption=Folding\Go to root-level
 method=go_level_root
-
-[item9]
-section=commands
-caption=Folding\-
-method=_
 
 [item10]
 section=commands
