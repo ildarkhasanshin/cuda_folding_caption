@@ -1,7 +1,7 @@
 Plugin for CudaText.
 Show first line of the folding block on the top.
 
-Options / Settings-plugins / Folding / Config:
+Options / Settings-plugins / Folding Caption / Config:
 - "lexers": comma-separated list of lexers, which are allowed
 - "position": top or bottom
 
