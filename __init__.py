@@ -2,7 +2,7 @@ import os
 from cudatext import *
 
 FN_CONFIG = os.path.join(app_path(APP_DIR_SETTINGS), 'plugins.ini')
-SECTION = 'folding'
+SECTION = 'folding_caption'
 
 class Command:
     def __init__(self):
@@ -37,7 +37,7 @@ class Command:
                     #statusbar_proc(h_sbf_, STATUSBAR_SET_CELL_COLOR_LINE2, index=ind_, value=colors['EdTextFont']['color'])
                 statusbar_proc(h_sbf_, STATUSBAR_SET_CELL_TEXT, index=ind_, value=text_)
                 statusbar_proc(h_sbf_, STATUSBAR_SET_CELL_HINT, index=ind_, value=text_)
-                statusbar_proc(h_sbf_, STATUSBAR_SET_CELL_CALLBACK, index=ind_, value='module=cuda_folding;cmd=on_cell_click;info='+str(lines[ind_])+';')
+                statusbar_proc(h_sbf_, STATUSBAR_SET_CELL_CALLBACK, index=ind_, value='module=cuda_folding_caption;cmd=on_cell_click;info='+str(lines[ind_])+';')
 
     def on_cell_click(self, id_dlg, id_ctl, data='', info=''):
         ed.set_caret(0, int(info))
