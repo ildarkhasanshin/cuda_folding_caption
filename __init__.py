@@ -33,10 +33,8 @@ class Command:
                 statusbar_proc(h_sbf_, STATUSBAR_SET_PADDING, index=ind_, value=4)
                 statusbar_proc(h_sbf_, STATUSBAR_SET_CELL_COLOR_FONT, index=ind_, value=colors['EdTextFont']['color'])
                 statusbar_proc(h_sbf_, STATUSBAR_SET_CELL_COLOR_BACK, index=ind_, value=colors['EdTextBg']['color'])
-                #if self.position == 'top':
-                    #statusbar_proc(h_sbf_, STATUSBAR_SET_CELL_COLOR_LINE2, index=ind_, value=colors['EdTextFont']['color'])
                 statusbar_proc(h_sbf_, STATUSBAR_SET_CELL_TEXT, index=ind_, value=text_)
-                statusbar_proc(h_sbf_, STATUSBAR_SET_CELL_HINT, index=ind_, value=text_)
+                statusbar_proc(h_sbf_, STATUSBAR_SET_CELL_AUTOSIZE, index=ind_, value=True)
                 statusbar_proc(h_sbf_, STATUSBAR_SET_CELL_CALLBACK, index=ind_, value='module=cuda_folding_caption;cmd=on_cell_click;info='+str(lines[ind_])+';')
 
     def on_cell_click(self, id_dlg, id_ctl, data='', info=''):
