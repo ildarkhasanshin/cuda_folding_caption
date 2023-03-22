@@ -1,5 +1,6 @@
 import os
 from cudatext import *
+import re
 
 FN_CONFIG = os.path.join(app_path(APP_DIR_SETTINGS), 'plugins.ini')
 SECTION = 'folding_caption'
@@ -24,7 +25,7 @@ class Command:
             self.indexes.append(self.h_sbf)
         return self.indexes
 
-    def folding_set(self, text = '', lines = []):
+    def folding_set(self, text = '', hints = [], lines = []):
         h_sbf = self.folding_panel_init()
         colors = app_proc(PROC_THEME_UI_DICT_GET, '')
         for h_sbf_ in h_sbf:
@@ -35,6 +36,7 @@ class Command:
                 statusbar_proc(h_sbf_, STATUSBAR_SET_CELL_COLOR_FONT, index=ind_, value=colors['EdTextFont']['color'])
                 statusbar_proc(h_sbf_, STATUSBAR_SET_CELL_COLOR_BACK, index=ind_, value=colors['EdTextBg']['color'])
                 statusbar_proc(h_sbf_, STATUSBAR_SET_CELL_TEXT, index=ind_, value=text_)
+                statusbar_proc(h_sbf_, STATUSBAR_SET_CELL_HINT, index=ind_, value=hints[ind_])
                 statusbar_proc(h_sbf_, STATUSBAR_SET_CELL_AUTOSIZE, index=ind_, value=True)
                 statusbar_proc(h_sbf_, STATUSBAR_SET_CELL_CALLBACK, index=ind_, value='module=cuda_folding_caption;cmd=on_cell_click;info='+str(lines[ind_])+';')
 
@@ -54,16 +56,18 @@ class Command:
         res = self.get_fold_block(ed.get_carets()[0][1])
         text_ = []
         self.lines_ = []
+        hints = []
         if res is not None:
             for res_ in res:
-                txt = ed.get_text_line(res_).strip()
-                txt_ = txt[:-1] if txt[-1] in [':', '{', '}'] else txt
+                hint = ed.get_text_line(res_).strip().rstrip(':;{}')
+                txt = re.sub(r'\([^()]*\)', '', hint).strip()
                 ml = int(self.max_length)
-                if len(txt_) > ml:
-                    txt_ = txt_[0:ml] + '...'
-                text_.append(txt_)
+                if len(txt) > ml:
+                    txt = txt[0:ml] + '...'
+                text_.append(txt)
+                hints.append(hint)
                 self.lines_.append(res_)
-            self.folding_set(text_, self.lines_)
+            self.folding_set(text_, hints, self.lines_)
         else:
             self.folding_set()
 
