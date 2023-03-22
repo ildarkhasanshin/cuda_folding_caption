@@ -10,6 +10,7 @@ class Command:
         self.h_pfs = []
         self.lexers = ini_read(FN_CONFIG, SECTION, 'lexers', 'Python,Markdown,reStructuredText')
         self.position = ini_read(FN_CONFIG, SECTION, 'position', 'top')
+        self.max_length = ini_read(FN_CONFIG, SECTION, 'max_length', '40')
 
     def folding_panel_init(self):
         self.h_pf = ed.get_prop(PROP_HANDLE_PARENT)
@@ -55,9 +56,12 @@ class Command:
         self.lines_ = []
         if res is not None:
             for res_ in res:
-                txt_ = ed.get_text_line(res_)
-                txt__ = txt_[:-1] if txt_[-1] in [':', '{', '}'] else txt_
-                text_.append(txt__.strip())
+                txt = ed.get_text_line(res_).strip()
+                txt_ = txt[:-1] if txt[-1] in [':', '{', '}'] else txt
+                ml = int(self.max_length)
+                if len(txt_) > ml:
+                    txt_ = txt_[0:ml] + '...'
+                text_.append(txt_)
                 self.lines_.append(res_)
             self.folding_set(text_, self.lines_)
         else:
@@ -86,6 +90,7 @@ class Command:
     def config(self):
         ini_write(FN_CONFIG, SECTION, 'lexers', self.lexers)
         ini_write(FN_CONFIG, SECTION, 'position', self.position)
+        ini_write(FN_CONFIG, SECTION, 'max_length', self.max_length)
         file_open(FN_CONFIG)
         lines = [ed.get_text_line(i) for i in range(ed.get_line_count())]
         try:
