@@ -55,7 +55,9 @@ class Command:
         self.lines_ = []
         if res is not None:
             for res_ in res:
-                text_.append(ed.get_text_line(res_)[:-1].strip())
+                txt_ = ed.get_text_line(res_)
+                txt__ = txt_[:-1] if txt_[-1] in [':', '{', '}'] else txt_
+                text_.append(txt__.strip())
                 self.lines_.append(res_)
             self.folding_set(text_, self.lines_)
         else:
