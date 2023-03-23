@@ -12,7 +12,7 @@ class Command:
         self.lexers = ini_read(FN_CONFIG, SECTION, 'lexers', 'Python,Markdown,reStructuredText')
         self.position = ini_read(FN_CONFIG, SECTION, 'position', 'top')
         self.max_length = ini_read(FN_CONFIG, SECTION, 'max_length', '40')
-        self.cuts = ini_read(FN_CONFIG, SECTION, 'cuts', 'def,function,for')
+        self.cuts = ini_read(FN_CONFIG, SECTION, 'cuts', 'def,function')
 
     def folding_panel_init(self, ed: Editor):
         self.h_pf = ed.get_prop(PROP_HANDLE_PARENT)
@@ -84,16 +84,18 @@ class Command:
         self.on_caret_slow(ed_self)
 
     def go_level_above(self):
-        y = ed.get_carets()[0][1]
-        y_ = 0
-        for l_ in self.lines_[::-1]:
-            if l_ < y:
-                 y_ = l_
-                 break
-        ed.set_caret(0, y_)
+        if (len(self.lines_) > 0):
+            y = ed.get_carets()[0][1]
+            y_ = 0
+            for l_ in self.lines_[::-1]:
+                if l_ < y:
+                     y_ = l_
+                     break
+            ed.set_caret(0, y_)
 
     def go_level_root(self):
-        ed.set_caret(0, self.lines_[0])
+        if (len(self.lines_) > 0):
+            ed.set_caret(0, self.lines_[0])
 
     def config(self):
         ini_write(FN_CONFIG, SECTION, 'lexers', self.lexers)
