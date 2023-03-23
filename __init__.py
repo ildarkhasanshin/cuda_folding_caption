@@ -13,7 +13,7 @@ class Command:
         self.position = ini_read(FN_CONFIG, SECTION, 'position', 'top')
         self.max_length = ini_read(FN_CONFIG, SECTION, 'max_length', '40')
 
-    def folding_panel_init(self):
+    def folding_panel_init(self, ed: Editor):
         self.h_pf = ed.get_prop(PROP_HANDLE_PARENT)
         colors = app_proc(PROC_THEME_UI_DICT_GET, '')
         if self.h_pf not in self.h_pfs:
@@ -25,8 +25,8 @@ class Command:
             self.indexes.append(self.h_sbf)
         return self.indexes
 
-    def folding_set(self, text = '', hints = [], lines = []):
-        h_sbf = self.folding_panel_init()
+    def folding_set(self, ed: Editor, text = '', hints = [], lines = []):
+        h_sbf = self.folding_panel_init(ed)
         colors = app_proc(PROC_THEME_UI_DICT_GET, '')
         for h_sbf_ in h_sbf:
             statusbar_proc(h_sbf_, STATUSBAR_DELETE_ALL)
@@ -52,7 +52,7 @@ class Command:
                 res.append(f0)
         return res
 
-    def work(self):
+    def work(self, ed: Editor):
         res = self.get_fold_block(ed.get_carets()[0][1])
         text_ = []
         self.lines_ = []
@@ -67,14 +67,14 @@ class Command:
                 text_.append(txt)
                 hints.append(hint)
                 self.lines_.append(res_)
-            self.folding_set(text_, hints, self.lines_)
+            self.folding_set(ed, text_, hints, self.lines_)
         else:
-            self.folding_set()
+            self.folding_set(ed)
 
     def on_caret_slow(self, ed_self):
         lexer = ed_self.get_prop(PROP_LEXER_FILE)
         if ','+lexer+',' in ','+self.lexers+',':
-            self.work()
+            self.work(ed_self)
 
     def on_focus(self, ed_self):
         self.on_caret_slow(ed_self)
