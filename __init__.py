@@ -7,8 +7,7 @@ SECTION = 'folding_caption'
 
 class Command:
     def __init__(self):
-        self.indexes = []
-        self.h_pfs = []
+        self.indexes = {}
         self.lexers = ini_read(FN_CONFIG, SECTION, 'lexers', 'Python,Markdown,reStructuredText')
         self.position = ini_read(FN_CONFIG, SECTION, 'position', 'top')
         self.max_length = ini_read(FN_CONFIG, SECTION, 'max_length', '40')
@@ -17,19 +16,19 @@ class Command:
     def folding_panel_init(self, ed: Editor):
         self.h_pf = ed.get_prop(PROP_HANDLE_PARENT)
         colors = app_proc(PROC_THEME_UI_DICT_GET, '')
-        if self.h_pf not in self.h_pfs:
+        if self.h_pf not in self.indexes.keys():
             self.n_sbf = dlg_proc(self.h_pf, DLG_CTL_ADD, 'statusbar')
             self.h_sbf = dlg_proc(self.h_pf, DLG_CTL_HANDLE, index=self.n_sbf)
             position_ = ALIGN_TOP if self.position == 'top' else ALIGN_BOTTOM
             dlg_proc(self.h_pf, DLG_CTL_PROP_SET, index=self.n_sbf, prop={'color':colors['EdTextBg']['color'],'align':position_})
-            self.h_pfs.append(self.h_pf)
-            self.indexes.append(self.h_sbf)
+            self.indexes[self.h_pf] = self.h_sbf
         return self.indexes
 
     def folding_set(self, ed: Editor, text = '', hints = [], lines = []):
         h_sbf = self.folding_panel_init(ed)
         colors = app_proc(PROC_THEME_UI_DICT_GET, '')
-        for h_sbf_ in h_sbf:
+        if self.h_pf in self.indexes:
+            h_sbf_ = self.indexes[self.h_pf]
             statusbar_proc(h_sbf_, STATUSBAR_DELETE_ALL)
             for text_ in text:
                 ind_ = statusbar_proc(h_sbf_, STATUSBAR_ADD_CELL)
@@ -82,6 +81,9 @@ class Command:
 
     def on_focus(self, ed_self):
         self.on_caret_slow(ed_self)
+
+    def on_close(self, ed_self):
+        self.indexes.pop(ed_self.get_prop(PROP_HANDLE_PARENT), None)
 
     def go_level_above(self):
         if (len(self.lines_) > 0):
