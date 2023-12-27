@@ -46,9 +46,9 @@ class Command:
 
     def get_fold_block(self, y):
         res = []
-        for fold in ed.folding(FOLDING_GET_LIST):
-            f0 = fold[0]
-            f1 = fold[1]
+        for fold in ed.folding(FOLDING_ENUM, item_y=y, item_y2=y): # results with filteting!
+            f0 = fold['y']
+            f1 = fold['y2']
             if f0 <= y <= f1 and ((f1 - f0) > 0):
                 res.append(f0)
         return res
