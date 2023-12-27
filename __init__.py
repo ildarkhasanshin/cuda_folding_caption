@@ -7,6 +7,7 @@ SECTION = 'folding_caption'
 
 class Command:
     def __init__(self):
+        self.lines_ = []
         self.indexes = {}
         self.lexers = ini_read(FN_CONFIG, SECTION, 'lexers', 'Python,Markdown,reStructuredText')
         self.position = ini_read(FN_CONFIG, SECTION, 'position', 'top')
